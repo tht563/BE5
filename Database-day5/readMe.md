@@ -87,6 +87,64 @@ WHERE length_min < (SELECT AVG(length_min)
 ```SQL
 SELECT room.name
 FROM room
-WHERE room.no_seats = (SELECT MAX(room.no_seats) from room);
+WHERE room.no_seats = (SELECT MIN(room.no_seats) from room);
 ```
 11. What room have number of seat bigger than average number of seat of all rooms
+```SQL
+SELECT room.name
+FROM room
+WHERE room.no_seats > (SELECT AVG(room.no_seats) FROM room);
+```
+12. Ngoai nhung seat mà Ong Dung booking duoc o booking id = 1 thi ong CÓ THỂ (CAN) booking duoc nhung seat nao khac khong?
+```SQL
+
+```
+13. Show Film with total screening and order by total screening. BUT ONLY SHOW DATA OF FILM WITH TOTAL SCREENING > 10
+```SQL
+SELECT film.name, COUNT(film.id) AS total_screening
+FROM film JOIN screening ON screening.film_id = film.id
+GROUP BY film.id
+HAVING COUNT(film.id) > 10
+ORDER BY total_screening DESC;
+```
+14. TOP 3 DAY OF WEEK based on total booking
+```SQL
+SELECT DAYNAME(screening.start_time) AS day_of_week, COUNT(booking.id) AS total_booking
+FROM booking JOIN screening ON screening.id = booking.screening_id
+GROUP BY DAYNAME(screening.start_time)
+ORDER BY total_booking DESC
+LIMIT 3;
+```
+15. CALCULATE BOOKING rate over screening of each film ORDER BY RATES.
+```SQL
+SELECT film.name, (COUNT(booking.id)/(SELECT COUNT(booking.id) FROM booking)) AS booking_rate
+FROM booking
+JOIN screening ON screening.id = booking.screening_id
+JOIN film ON film.id = screening.film_id
+GROUP BY film.id
+ORDER BY booking_rate DESC;
+```
+16. CONTINUE Q15 -> WHICH film has rate over average ?.
+```SQL
+JOIN screening ON screening.id = booking.screening_id
+JOIN film ON film.id = screening.film_id
+GROUP BY film.id
+HAVING booking_rate>(SELECT AVG(rate)
+			FROM
+            		(SELECT (COUNT(booking.id)/(SELECT COUNT(booking.id) FROM booking)) as rate
+				FROM booking
+				JOIN screening ON screening.id = booking.screening_id
+				JOIN film ON film.id = screening.film_id
+				GROUP BY film.id) as sub_table);
+```
+17. TOP 2 people who enjoy the least TIME (in minutes) in the cinema based on booking info - only count who has booking info (example : Dũng book film tom&jerry 4 times -> Dũng enjoy 90 mins x 4)
+```SQL
+SELECT customer.first_name, customer.last_name, SUM(film.length_min) AS amount_of_time
+FROM customer
+JOIN booking ON booking.customer_id = customer.id
+JOIN screening ON screening.id = booking.screening_id
+JOIN film ON film.id = screening.film_id
+GROUP BY customer.id
+ORDER BY amount_of_time ASC
+LIMIT 2;
+```
