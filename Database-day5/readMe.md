@@ -72,7 +72,7 @@ JOIN screening ON screening.film_id = film.id
 GROUP BY screening.film_id, date_start
 HAVING date_start = '2022-5-28';
 ```
-10. What film has showing time above and below average show time of all film
+9. What film has showing time above and below average show time of all film
 ```SQL
 SELECT name
 FROM film
