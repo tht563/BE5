@@ -8,12 +8,13 @@ public class Product {
 	private boolean is_new;
 	private int quantity;
 	private String description;
+	private int categoryId;
 	
 	public Product() {
 		
 	}
 	
-	public Product(int id, String name, int price, String imgName, boolean is_new, int quantity, String description) {
+	public Product(int id, String name, int price, String imgName, boolean is_new, int quantity, String description, int categoryId) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -22,9 +23,18 @@ public class Product {
 		this.is_new = is_new;
 		this.quantity = quantity;
 		this.description = description;
+		this.categoryId = categoryId;
 	}
 
 
+
+	public int getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(int categoryId) {
+		this.categoryId = categoryId;
+	}
 
 	public int getQuantity() {
 		return quantity;

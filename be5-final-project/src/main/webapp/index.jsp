@@ -1,16 +1,39 @@
 <!DOCTYPE html>
-<%@page import ="java.util.List"%>
+<%@page import ="java.util.*"%>
 <%@page import = "entity.Product"%>
+<%@page import = "entity.Category"%>
 <%@page import = "dao.ProductDAO"%>
+<%@page import = "dao.CategoryDAO"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <html>
 	<%
 		ProductDAO productDAO = new ProductDAO();
-		List <Product> products = productDAO.getLastestProducts();
+		CategoryDAO categoryDAO = new CategoryDAO();
 		
-		pageContext.setAttribute("lastestProducts", products);
+		List<Category> categories  = new ArrayList<Category>();
+		categories = categoryDAO.getCategories();
+		List <Product> products = new ArrayList<Product>();
+		String typeOfProduct = "latest";
+		String categoryId = (String) request.getParameter("category");
+
+		if (categoryId == null){
+			products = productDAO.getLastestProducts();
+		}else{
+			products = productDAO.getProductByCategory(categoryId);
+			typeOfProduct = categoryDAO.getCategoryById(categoryId);
+		}
+		
+		String search = (String) request.getParameter("search");
+		if (search != null){
+			typeOfProduct = "List of ";
+			products = productDAO.getProductBySearch(search);
+		}
+		
+		pageContext.setAttribute("typeOfProduct",typeOfProduct);
+		pageContext.setAttribute("categories", categories);
+		pageContext.setAttribute("products", products);
 	%>
 <head> 
   <!-- Basic -->
@@ -59,32 +82,14 @@
             <li class="nav-item active">
               <a class="nav-link" href="index.jsp">Home <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="shop.html">
-                Shop
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="why.html">
-                Why Us
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="testimonial.html">
-                Testimonial
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="contact.html">Contact Us</a>
-            </li>
-          </ul>
-          <div class="user_option">
-            <a href="">
-              <i class="fa fa-user" aria-hidden="true"></i>
-              <span>
-                Login
-              </span>
-            </a>
+            <c:forEach items="${categories}" var = "categories">
+            
+	            <li class="nav-item">
+	              <a class="nav-link" href="index.jsp?category=${categories.id}">
+	                ${categories.name}
+	              </a>
+	            </li>
+            </c:forEach>
             <a href="">
               <i class="fa fa-shopping-bag" aria-hidden="true"></i>
             </a>
@@ -203,13 +208,20 @@
 
   <section class="shop_section layout_padding">
     <div class="container">
+      <div class="col-sm-6 col-md-4 col-lg-9">
+	      <form>
+	      	<input type="text" id="search" name="search">
+	      	<input type="submit" value="Submit">
+	      </form>     
+      </div>
       <div class="heading_container heading_center">
         <h2>
-          Latest Products
+          ${typeOfProduct} PRODUCTS
         </h2>
+
       </div>
       <div class="row">
-      <c:forEach items="${lastestProducts}" var="product">
+      <c:forEach items="${products}" var="product">
         <div class="col-sm-6 col-md-4 col-lg-3">
           <div class="box">
             <a href="product-details.jsp?productId=${product.id}">
@@ -217,7 +229,7 @@
                 <img src="images/${product.imgName}" alt="">
               </div>
               <div class="detail-box">
-                <h6> ${product.name} </h6>
+                <h6> ${product.name}</h6>
                 <h6> Price
                   <span>
                     $${product.price}

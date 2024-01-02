@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<%@page import ="java.util.List"%>
+<%@page import ="java.util.*"%>
 <%@page import = "entity.Product"%>
+<%@page import = "entity.Category"%>
 <%@page import = "dao.ProductDAO"%>
+<%@page import = "dao.CategoryDAO"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
@@ -10,6 +12,10 @@
 		String productId = request.getParameter("productId");
 		ProductDAO productDAO = new ProductDAO();
 		Product product = productDAO.getProductById(productId);
+		
+		CategoryDAO categoryDAO = new CategoryDAO();
+		List<Category> categories  = new ArrayList<Category>();
+		categories = categoryDAO.getCategories();
 		
 		pageContext.setAttribute("productId", productId);
 		pageContext.setAttribute("product", product);
