@@ -9,16 +9,7 @@
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <html>
 	<%
-		String productId = request.getParameter("productId");
-		ProductDAO productDAO = new ProductDAO();
-		Product product = productDAO.getProductById(productId);
-		
-		CategoryDAO categoryDAO = new CategoryDAO();
-		List<Category> categories  = new ArrayList<Category>();
-		categories = categoryDAO.getCategories();
-		
-		pageContext.setAttribute("productId", productId);
-		pageContext.setAttribute("product", product);
+
 	%>
 <head> 
   <!-- Basic -->
@@ -51,60 +42,7 @@
 <body>
   <div class="hero_area">
     <!-- header section strats -->
-    <header class="header_section">
-      <nav class="navbar navbar-expand-lg custom_nav-container ">
-        <a class="navbar-brand" href="index.jsp">
-          <span>
-            Giftos
-          </span>
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class=""></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav  ">
-            <li class="nav-item active">
-              <a class="nav-link" href="index.jsp">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="shop.html">
-                Shop
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="why.html">
-                Why Us
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="testimonial.html">
-                Testimonial
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="contact.html">Contact Us</a>
-            </li>
-          </ul>
-          <div class="user_option">
-            <a href="">
-              <i class="fa fa-user" aria-hidden="true"></i>
-              <span>
-                Login
-              </span>
-            </a>
-            <a href="">
-              <i class="fa fa-shopping-bag" aria-hidden="true"></i>
-            </a>
-            <form class="form-inline ">
-              <button class="btn nav_search-btn" type="submit">
-                <i class="fa fa-search" aria-hidden="true"></i>
-              </button>
-            </form>
-          </div>
-        </div>
-      </nav>
-    </header>
+    <jsp:include page="header-section.jsp"/>
     <!-- end header section -->
     <!-- slider section -->
 
@@ -239,6 +177,7 @@
             </a>
           </div>
         </div>
+        
       	<div class="col-sm-6 col-md-8 col-lg-9">
       		<div class="box">
       			<h6>Quantity : ${product.quantity}</h6>
@@ -247,6 +186,14 @@
       		</div>
       	</div>
       </div>
+      <br/>
+      
+      <form action="Cart">
+      	<input type="text" value="ADD_TO_CART" name="action" hidden="true">
+      	<input type="text" value="${product.id}" name="productId" hidden="true">
+      	<input type="submit" value="ADD TO CART">
+      </form>
+      
       <div class="btn-box">
         <a href="all-products.jsp">
           View All Products
@@ -348,8 +295,7 @@
 
   <script src="js/jquery-3.4.1.min.js"></script>
   <script src="js/bootstrap.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
-  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
   <script src="js/custom.js"></script>
 
 </body>
