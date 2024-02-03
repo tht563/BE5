@@ -31,7 +31,7 @@ public class ProductDAO {
 		return products;
 	}
 	
-	public Product getProductById (String productId) throws SQLException {
+	public static Product getProductById (String productId) throws SQLException {
 		Connection connection = DBConnection.makeConnection();
 		Statement stmt = connection.createStatement();
 		String sqlQuery = "SELECT * FROM product WHERE product.id = "+productId+";";

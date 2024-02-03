@@ -35,6 +35,7 @@
               		<a class="nav-link" href="register.jsp">Register</a>
             	</li>
             </c:if>
+            
             <c:if test="${not empty sessionScope.user}">
 	            <li>
 	               <a class="nav-link" href="login.jsp">Hello ${sessionScope.user.username}</a>
@@ -43,8 +44,11 @@
 	            	<a class="nav-link" href="Authentication?action=LOGOUT">Logout</a>
 	            </li>
             </c:if>
-            <a href=""> <i class="fa fa-shopping-bag" aria-hidden="true"></i> ${sessionScope.cart.size()}
-          </div>
+            
+            <a href="Cart?action=VIEW_CART_DETAILS">
+            	<i class="fa fa-shopping-bag" aria-hidden="true"></i> ${sessionScope.cart.getItems().size()}
+            </a>
+         </ul>	 
         </div>
       </nav>
     </header>
